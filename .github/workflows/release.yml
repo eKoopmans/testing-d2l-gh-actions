@@ -25,8 +25,8 @@ jobs:
       - name: Match LMS Release
         uses: ./.github/actions/match-lms-release
         with:
+          AUTO_MAINTENANCE_BRANCH: true
           RALLY_API_KEY: ${{ secrets.RALLY_API_KEY }}
-          GITHUB_TOKEN: foo
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM: true
           NPM_TOKEN: foo
-          DRY_RUN: true

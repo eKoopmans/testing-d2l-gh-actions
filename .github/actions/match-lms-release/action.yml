@@ -105,7 +105,7 @@ runs:
     - name: Publish to NPM
       if: ${{ inputs.NPM != 'false' }}
       run: |
-        OPTS=""
+        OPTS=" --dry-run"
         [ ${{ inputs.DRY_RUN }} == true ] && OPTS=" --dry-run"
         [ ! -z "${{ steps.info.outputs.MAINTENANCE_VERSION }}" ] && OPTS="${OPTS} --tag release-${{ steps.info.outputs.MAINTENANCE_VERSION }}"
 
