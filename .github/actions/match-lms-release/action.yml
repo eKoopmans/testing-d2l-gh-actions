@@ -102,7 +102,7 @@ runs:
       shell: bash
 
     - name: Publish to NPM
-      if: ${{ inputs.NPM != false }}
+      if: ${{ inputs.NPM != 'false' }}
       run: |
         OPTS=""
         [ ${{ inputs.DRY_RUN }} == true ] && OPTS=" --dry-run"
