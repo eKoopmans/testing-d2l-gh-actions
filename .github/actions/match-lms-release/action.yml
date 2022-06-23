@@ -108,7 +108,7 @@ runs:
         [ ${{ inputs.DRY_RUN }} == true ] && OPTS=" --dry-run"
         [ ! -z "${{ steps.info.outputs.MAINTENANCE_VERSION }}" ] && OPTS="${OPTS} --tag release-${{ steps.info.outputs.MAINTENANCE_VERSION }}"
 
-        echo "Publishing to npm with options: ${OPTS}"
+        echo "Running npm publish with options: ${OPTS}"
         npm publish ${OPTS}
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
