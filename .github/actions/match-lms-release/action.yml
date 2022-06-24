@@ -88,7 +88,7 @@ runs:
 
         if [ ${{ inputs.DRY_RUN }} == false ]; then
           echo "Not a dry run, pushing..."
-          git push --follow-tags --repo=https://@github.com/${{ github.repository }}
+          git push --follow-tags --repo=https://github.com/${{ github.repository }}
         fi
       shell: bash
 
