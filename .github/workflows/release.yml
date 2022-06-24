@@ -27,4 +27,4 @@ jobs:
           RALLY_API_KEY: ${{ secrets.RALLY_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM: true
-          NPM_TOKEN: foo
+          NPM_TOKEN: bar

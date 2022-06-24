@@ -43,7 +43,7 @@ runs:
     - name: Get LMS Version
       id: get-lms-version
       run: |
-        echo "::set-output name=LMS_VERSION::20.22.12"
+        echo "::set-output name=LMS_VERSION::20.22.13"
       shell: bash
 
     - name: Gather Information
