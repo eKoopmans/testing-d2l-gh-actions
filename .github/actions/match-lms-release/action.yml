@@ -75,7 +75,8 @@ runs:
           if [ ${{ inputs.AUTO_MAINTENANCE_BRANCH }} == true ] && [ ${{ inputs.DRY_RUN }} == false ]; then
             echo creating a maintenance branch for ${LATEST_MINOR}.x
             git fetch https://${{ inputs.GITHUB_TOKEN }}@github.com/${{ github.repository }} "+refs/tags/v$LATEST_VERSION:refs/tags/v$LATEST_VERSION" --no-tags
-            git branch "release/$LATEST_MINOR.x" "v$LATEST_VERSION"
+            git checkout -b "release/$LATEST_MINOR.x" "v$LATEST_VERSION"
+            git commit --allow-empty -m "Empty commit [skip ci]"
             git push https://${{ inputs.GITHUB_TOKEN }}@github.com/${{ github.repository }} "release/$LATEST_MINOR.x"
           fi
           #update directly instead of bumping in case we've missed one
