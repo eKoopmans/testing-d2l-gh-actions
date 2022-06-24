@@ -12,10 +12,11 @@ jobs:
     name: Release
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Checkout
         uses: Brightspace/third-party-actions@actions/checkout
+        with:
+          persist-credentials: false
       - name: Setup Node
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
