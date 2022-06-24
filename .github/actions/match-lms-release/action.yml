@@ -43,7 +43,7 @@ runs:
     - name: Get LMS Version
       id: get-lms-version
       run: |
-        echo "::set-output name=LMS_VERSION::20.22.9"
+        echo "::set-output name=LMS_VERSION::20.22.10"
       shell: bash
 
     - name: Gather Information
@@ -74,8 +74,8 @@ runs:
         else
           if [ ${{ inputs.AUTO_MAINTENANCE_BRANCH }} == true ] && [ ${{ inputs.DRY_RUN }} == false ]; then
             echo creating a maintenance branch for ${LATEST_MINOR}.x
-            git branch "release/$LATEST_MINOR.x"
-            echo Current branch: $( git branch )
+            git fetch https://${{ inputs.GITHUB_TOKEN }}@github.com/${{ github.repository }} "+refs/tags/v$LATEST_VERSION:refs/tags/v$LATEST_VERSION" --no-tags
+            git branch "release/$LATEST_MINOR.x" "v$LATEST_VERSION"
             git push https://${{ inputs.GITHUB_TOKEN }}@github.com/${{ github.repository }} "release/$LATEST_MINOR.x"
           fi
           #update directly instead of bumping in case we've missed one
