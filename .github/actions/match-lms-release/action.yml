@@ -40,10 +40,11 @@ runs:
         fi
       shell: bash
 
-    - uses: Brightspace/lms-version-actions/get-lms-release@main
+    - name: Get LMS Version
       id: get-lms-version
       run: |
         echo "::set-output name=LMS_VERSION::20.22.9"
+      shell: bash
 
     - name: Gather Information
       id: info
