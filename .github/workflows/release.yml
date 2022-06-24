@@ -26,6 +26,6 @@ jobs:
         with:
           AUTO_MAINTENANCE_BRANCH: true
           RALLY_API_KEY: ${{ secrets.RALLY_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.FOO_TOKEN }}
           NPM: true
           NPM_TOKEN: foo
