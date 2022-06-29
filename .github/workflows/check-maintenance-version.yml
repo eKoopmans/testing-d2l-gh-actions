@@ -1,0 +1,19 @@
+name: Check Maintanence Version
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  check-maintenance-version:
+    name: Check Maintenance Version
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get maintenance version
+        uses: BrightspaceUI/actions/get-maintenance-version@main
+        id: get-maintenance-version
+      - name: Some other action
+        run: |
+          echo "Maintenance version: ${{ steps.get-maintenance-version.outputs.MAINTENANCE_VERSION }}"
+          echo "Is maintenance branch: ${{ steps.get-maintenance-version.outputs.IS_MAINTENANCE_BRANCH }}"
