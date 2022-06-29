@@ -10,6 +10,8 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
       - name: Get maintenance version
         uses: ./.github/actions/get-maintenance-version
         id: get-maintenance-version
