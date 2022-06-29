@@ -28,3 +28,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM: true
           NPM_TOKEN: bar
+          DRY_RUN: true

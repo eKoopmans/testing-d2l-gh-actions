@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get maintenance version
-        uses: BrightspaceUI/actions/get-maintenance-version@main
+        uses: ./.github/actions/get-maintenance-version
         id: get-maintenance-version
       - name: Some other action
         run: |
