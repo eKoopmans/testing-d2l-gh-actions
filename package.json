@@ -1,6 +1,6 @@
 {
   "name": "testing-d2l-gh-actions",
-  "version": "2022.13.2",
+  "version": "2022.13.3",
   "description": "",
   "main": "index.js",
   "scripts": {
