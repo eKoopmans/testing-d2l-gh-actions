@@ -23,7 +23,7 @@ jobs:
         shell: bash
         env:
           BRANCH: ${{ steps.get-branch.outputs.branch }}
-          LMS_VERSION: 2022.10.1
+          LMS_VERSION: 20.22.10
       - name: Increment Release
         id: increment-release
         uses: Brightspace/third-party-actions@actions/github-script
@@ -31,31 +31,25 @@ jobs:
           result-encoding: string
           script: |
             const release = process.env.RELEASE;
-            const releaseRe = new RegExp(`^v${release.replace('.', '\\.')}-([0-9]+)$`);
-            console.log('release', release, releaseRe);
+            const releaseRe = new RegExp(`^v${release.replace('.', '\\.')}\\.([0-9]+)$`);
 
             let maxVersion = 0;
+
             await github.paginate(github.repos.listReleases, {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 per_page: 100
               }, (response, done) => {
-                console.log('response', response);
-                const releases = response.data.map(release => release.tag_name);
-                for (let i = 0; i < releases.length; i++) {
-                  const match = releaseRe.exec(releases[i]);
+                for (const release of response.data) {
+                  const match = releaseRe.exec(release.tag_name);
                   if (match) {
-                    const version = parseInt(match[1]);
-                    if (version > maxVersion) {
-                      maxVersion = version;
-                    }
+                    maxVersion = parseInt(match[1]);
+                    return done();
                   }
                 }
-                done();
             });
 
             console.log(`Maximum existing build for release "${release}" is "${maxVersion}".`);
-            console.log('return', `v${release}-${++maxVersion}`);
             return `v${release}-${++maxVersion}`;
         env:
           RELEASE: ${{ steps.get-release.outputs.release }}
