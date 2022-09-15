@@ -54,4 +54,4 @@ jobs:
             console.log('return', `v${release}-${++maxVersion}`);
             return `v${release}-${++maxVersion}`;
         env:
-          RELEASE: 2022.13
+          RELEASE: 2022.8
