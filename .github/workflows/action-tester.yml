@@ -41,9 +41,8 @@ jobs:
                 repo: context.repo.repo,
                 per_page: 100
               }, (response, done) => {
-                const releases = response.data.map(release => release.tag_name);
-                foreach (release in releases) {
-                  const match = releaseRe.exec(releases[i]);
+                for (const release of response.data) {
+                  const match = releaseRe.exec(release.tag_name);
                   if (match) {
                     maxVersion = parseInt(match[1]);
                     return done();
