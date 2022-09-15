@@ -40,7 +40,6 @@ jobs:
                 repo: context.repo.repo,
                 per_page: 1
               }, (response, done) => {
-                console.log('!!! new page');
                 for (const release of response.data) {
                   const match = releaseRe.exec(release.tag_name);
                   if (match) {
@@ -51,7 +50,6 @@ jobs:
             });
 
             console.log(`Maximum existing build for release "${release}" is "${maxVersion}".`);
-            console.log('return', `v${release}-${++maxVersion}`);
             return `v${release}-${++maxVersion}`;
         env:
-          RELEASE: 2022.8
+          RELEASE: ${{ steps.get-release.outputs.release }}
