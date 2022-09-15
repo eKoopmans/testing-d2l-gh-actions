@@ -23,7 +23,7 @@ jobs:
         shell: bash
         env:
           BRANCH: ${{ steps.get-branch.outputs.branch }}
-          LMS_VERSION: 2022.10.1
+          LMS_VERSION: 20.22.10
       - name: Increment Release
         id: increment-release
         uses: Brightspace/third-party-actions@actions/github-script
@@ -35,10 +35,12 @@ jobs:
             console.log('release', release, releaseRe);
 
             let maxVersion = 0;
+            console.log('listReleases', github.repos.listReleases);
+
             await github.paginate(github.repos.listReleases, {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                per_page: 100
+                per_page: 2
               }, (response, done) => {
                 console.log('response', response);
                 const releases = response.data.map(release => release.tag_name);
