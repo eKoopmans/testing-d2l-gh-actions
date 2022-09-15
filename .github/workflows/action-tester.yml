@@ -31,8 +31,7 @@ jobs:
           result-encoding: string
           script: |
             const release = process.env.RELEASE;
-            const releaseRe = new RegExp(`^v${release.replace('.', '\\.')}-([0-9]+)$`);
-            console.log('release', release, releaseRe);
+            const releaseRe = new RegExp(`^v${release.replace('.', '\\.')}\\.([0-9]+)$`);
 
             let maxVersion = 0;
 
@@ -54,4 +53,4 @@ jobs:
             console.log('return', `v${release}-${++maxVersion}`);
             return `v${release}-${++maxVersion}`;
         env:
-          RELEASE: ${{ steps.get-release.outputs.release }}
+          RELEASE: 2022.13
