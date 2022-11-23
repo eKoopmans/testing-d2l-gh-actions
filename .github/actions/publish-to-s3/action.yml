@@ -7,24 +7,24 @@ inputs:
     default: ca-central-1
     required: false
   AWS_ROLE:
-    description: The AWS role to assume - must have write permission for your bucket
+    description: The AWS role to assume. This role must have write permission for your bucket
     required: true
   BUCKET_PATH:
-    description: TODO
+    description: The full path of your bucket, including subdirectories, to which to publish
     required: true
   BUILD_DIRECTORY:
-    description: TODO
+    description: The directory within your repo to publish to S3 (e.g. "./build/")
     required: true
   CACHE:
-    description: TODO
+    description: An optional comma-separated list of all file extensions you wish to have cached for 1 year (e.g. "js,css")
     default: ""
     required: false
   CACHE_DEFAULT:
-    description: TODO
+    description: An optional default caching policy to apply to all files (e.g. "--cache-control 'max-age=120'")
     default: ""
     required: false
   COMPRESS:
-    description: TODO
+    description: Whether to compress eligible files (if "true", will compress all of html/css/js/json/svg/xml)
     default: false
     required: false
 

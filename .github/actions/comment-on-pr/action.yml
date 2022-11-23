@@ -10,7 +10,7 @@ inputs:
     default: false
     required: false
   UNIQUE_KEY:
-    description: TODO
+    description: A unique key attached invisibly to the comment, for use with the ONLY_POST_ONCE option
     default: gh-actions--comment-on-pr
     required: false
 
@@ -37,5 +37,5 @@ runs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: `<!-- ${process.env.UNIQUE_KEY} -->\n${process.env.MESSAGE}`
+            body: `<!-- ${process.env.UNIQUE_KEY} -->\n\n${process.env.MESSAGE}`
           })
