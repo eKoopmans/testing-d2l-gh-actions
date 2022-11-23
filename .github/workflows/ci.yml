@@ -64,3 +64,4 @@ jobs:
             |----------|---|
             | internal | https://pr-${{ github.event.number }}-brightspace-ui-core.d2l.dev/  |
           ONLY_POST_ONCE: true
+          UNIQUE_KEY: other-unique-key
