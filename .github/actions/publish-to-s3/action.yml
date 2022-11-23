@@ -43,24 +43,24 @@ runs:
 
         for type in ${typesToCompress[@]}; do
           if [[ " ${typesToCache[*]} " =~ " ${type} " ]]; then
-            compressAndCache+="--include \'*.${type}\'"
+            compressAndCache+="--include '*.${type}'"
           else
-            compressOnly+="--include \'*.${type}\'"
+            compressOnly+="--include '*.${type}'"
           fi
-          neither+="--exclude \'*.${type}\'"
+          neither+="--exclude '*.${type}'"
         done
 
         for type in ${typesToCache[@]}; do
           if [[ ! " ${typesToCompress[*]} " =~ " ${type} " ]]; then
-            cacheOnly+="--include \'*.${type}\'"
-            neither+="--exclude \'*.${type}\'"
+            cacheOnly+="--include '*.${type}'"
+            neither+="--exclude '*.${type}'"
           fi
         done
 
-        echo "COMPRESS_AND_CACHE=\"$compressAndCache\"" >> $GITHUB_OUTPUT
-        echo "COMPRESS_ONLY=\"$compressOnly\"" >> $GITHUB_OUTPUT
-        echo "CACHE_ONLY=\"$cacheOnly\"" >> $GITHUB_OUTPUT
-        echo "DEFAULT=\"$neither\"" >> $GITHUB_OUTPUT
+        echo "COMPRESS_AND_CACHE=$compressAndCache" >> $GITHUB_OUTPUT
+        echo "COMPRESS_ONLY=$compressOnly" >> $GITHUB_OUTPUT
+        echo "CACHE_ONLY=$cacheOnly" >> $GITHUB_OUTPUT
+        echo "DEFAULT=$neither" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Compress
