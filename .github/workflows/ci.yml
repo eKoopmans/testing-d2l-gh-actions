@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - uses: Brightspace/third-party-actions@actions/checkout
+
       - name: Publish - default
         uses: ./.github/actions/publish-to-s3/
         with:
