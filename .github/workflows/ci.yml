@@ -1,0 +1,56 @@
+name: CI
+on:
+  pull_request
+  workflow_dispatch
+
+jobs:
+  publish:
+    name: Publish static site
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Publish - default
+        uses: ./.github/actions/publish-to-s3/
+        with:
+          AWS_ROLE: arn:aws:iam::037018655140:role/brightspace-ui-core.d2l.dev-githubactions-access
+          BUCKET_PATH: s3://brightspace-ui-core.d2l.dev/branches/pr-${{ github.event.number }}
+          BUILD_DIRECTORY: ./build/
+
+      - name: Publish - compress
+        uses: ./.github/actions/publish-to-s3/
+        with:
+          AWS_ROLE: arn:aws:iam::037018655140:role/brightspace-ui-core.d2l.dev-githubactions-access
+          BUCKET_PATH: s3://brightspace-ui-core.d2l.dev/branches/pr-${{ github.event.number }}
+          BUILD_DIRECTORY: ./build/
+          COMPRESS: true
+
+      - name: Publish - cache
+        uses: ./.github/actions/publish-to-s3/
+        with:
+          AWS_ROLE: arn:aws:iam::037018655140:role/brightspace-ui-core.d2l.dev-githubactions-access
+          BUCKET_PATH: s3://brightspace-ui-core.d2l.dev/branches/pr-${{ github.event.number }}
+          BUILD_DIRECTORY: ./build/
+          CACHE: js
+
+      - name: Publish - compress and cache
+        uses: ./.github/actions/publish-to-s3/
+        with:
+          AWS_ROLE: arn:aws:iam::037018655140:role/brightspace-ui-core.d2l.dev-githubactions-access
+          BUCKET_PATH: s3://brightspace-ui-core.d2l.dev/branches/pr-${{ github.event.number }}
+          BUILD_DIRECTORY: ./build/
+          CACHE: js,css
+          COMPRESS: true
+
+      - name: Notify
+        uses: ./.github/actions/comment-on-pr/
+        with:
+          MESSAGE: |
+            Thanks for the PR! 🎉
+            Here are the URLs to the instances deployed for this PR – you can use them to check everything looks as you expect!
+        
+            > **Note** The build needs to finish before your changes are deployed
+
+            | Instance | URL  |
+            |----------|---|
+            | internal | https://pr-${{ github.event.number }}-brightspace-ui-core.d2l.dev/  |
+          ONLY_POST_ONCE: true

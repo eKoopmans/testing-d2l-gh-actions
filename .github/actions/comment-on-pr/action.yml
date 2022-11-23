@@ -1,0 +1,35 @@
+name: Comment on PR
+description: Adds a comment on the current PR
+
+inputs:
+  MESSAGE:
+    description: The message to display
+    required: true
+  ONLY_POST_ONCE:
+    description: Check whether the current message has already been posted before posting again
+    default: false
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Find Previous Comment
+      if: ${{ inputs.ONLY_POST_ONCE != 'false' }}
+      uses: Brightspace/third-party-actions@peter-evans/find-comment
+      id: fc
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body-includes: 'Here are the URLs to the instances deployed for this PR'
+    - name: PR Deployment URLs
+      if: ${{ inputs.ONLY_POST_ONCE == 'false' || steps.fc.outputs.comment-id == '' }}
+      uses: Brightspace/third-party-actions@actions/github-script
+      env:
+        MESSAGE: ${{ inputs.MESSAGE }}
+      with:
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: process.env.MESSAGE
+          })

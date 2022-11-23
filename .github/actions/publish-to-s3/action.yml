@@ -1,0 +1,102 @@
+name: Publish to S3
+description: Publishes the specified directory using aws s3 sync
+
+inputs:
+  AWS_REGION:
+    description: The region of your AWS bucket
+    default: ca-central-1
+    required: false
+  AWS_ROLE:
+    description: The AWS role to assume - must have write permission for your bucket
+    required: true
+  BUCKET_PATH:
+    required: true
+  BUILD_DIRECTORY:
+    required: true
+  CACHE:
+    default: ""
+    required: false
+  CACHE_DEFAULT:
+    default: ""
+    required: false
+  COMPRESS:
+    default: false
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Assume role
+      if: ${{ false }}
+      uses: Brightspace/third-party-actions@aws-actions/configure-aws-credentials
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        role-to-assume: ${{ inputs.AWS_ROLE }}
+        role-duration-seconds: 3600
+        aws-region: ${{ inputs.AWS_REGION }}
+
+    - name: Parse files
+      id: parse-files
+      env:
+        CACHE: ${{ inputs.CACHE }}
+        COMPRESS: ${{ inputs.COMPRESS }}
+      run: |
+        typesToCompress=()
+        [[ $COMPRESS != 'false' ]] && typesToCompress=("html" "css" "js" "json" "svg" "xml")
+        typesToCache=(${CACHE//,/ })
+
+        compressAndCache=""
+        compressOnly=""
+        cacheOnly=""
+        neither=""
+
+        for type in ${typesToCompress[@]}; do
+          if [[ " ${typesToCache[*]} " =~ " ${type} " ]]; then
+            compressAndCache+="--include \'*.${type}\'"
+          else
+            compressOnly+="--include \'*.${type}\'"
+          fi
+          neither+="--exclude \'*.${type}\'"
+        done
+
+        for type in ${typesToCache[@]}; do
+          if [[ ! " ${typesToCompress[*]} " =~ " ${type} " ]]; then
+            cacheOnly+="--include \'*.${type}\'"
+            neither+="--exclude \'*.${type}\'"
+          fi
+        done
+
+        echo "COMPRESS_AND_CACHE=\"$compressAndCache\"" >> $GITHUB_OUTPUT
+        echo "COMPRESS_ONLY=\"$compressOnly\"" >> $GITHUB_OUTPUT
+        echo "CACHE_ONLY=\"$cacheOnly\"" >> $GITHUB_OUTPUT
+        echo "DEFAULT=\"$neither\"" >> $GITHUB_OUTPUT
+
+    - name: Compress
+      id: compress
+      if: ${{ inputs.COMPRESS != 'false' }}
+      env:
+        BUILD_DIRECTORY: ${{ inputs.BUILD_DIRECTORY }}
+      run: |
+        echo "ENCODING=\"--content-encoding 'br'\"" >> $GITHUB_OUTPUT
+        # Adding echo
+        echo find $BUILD_DIRECTORY \( -iname '*.html' -o -iname '*.css' -o -iname '*.js' -o -iname '*.json' -o -iname '*.svg' -o -iname '*.xml' \) -exec brotli {} \; -exec mv {}.br {} \;
+
+    - name: Deploy
+      env:
+        BUCKET_PATH: ${{ inputs.BUCKET_PATH }}
+        BUILD_DIRECTORY: ${{ inputs.BUILD_DIRECTORY }}
+        CACHE_POLICY: --cache-control 'public,max-age=31536000,immutable'
+        CACHE_DEFAULT: ${{ inputs.CACHE_DEFAULT }}
+        COMPRESS_ENCODING: ${{ steps.compress.outputs.ENCODING }}
+        FILES_CACHE_ONLY: ${{ steps.parse-files.outputs.CACHE_ONLY }}
+        FILES_COMPRESS_AND_CACHE: ${{ steps.parse-files.outputs.COMPRESS_AND_CACHE }}
+        FILES_COMPRESS_ONLY: ${{ steps.parse-files.outputs.COMPRESS_ONLY }}
+        FILES_DEFAULT: ${{ steps.parse-files.outputs.DEFAULT }}
+      run: |
+        # Adding echo
+        echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $COMPRESS_ENCODING $CACHE_POLICY --exclude '*.*' $FILES_COMPRESS_AND_CACHE
+        echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $COMPRESS_ENCODING $CACHE_DEFAULT --exclude '*.*' $FILES_COMPRESS_ONLY
+        echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $CACHE_POLICY --exclude '*.*' $FILES_CACHE_ONLY
+        echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $CACHE_DEFAULT $FILES_DEFAULT
