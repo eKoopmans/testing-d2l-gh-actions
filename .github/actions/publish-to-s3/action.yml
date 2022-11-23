@@ -87,8 +87,8 @@ runs:
         FILES_DEFAULT: ${{ steps.parse-files.outputs.DEFAULT }}
       run: |
         # Adding echo
-        echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $COMPRESS_ENCODING $CACHE_POLICY --exclude '*.*' $FILES_COMPRESS_AND_CACHE
-        echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $COMPRESS_ENCODING $CACHE_DEFAULT --exclude '*.*' $FILES_COMPRESS_ONLY
-        echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $CACHE_POLICY --exclude '*.*' $FILES_CACHE_ONLY
+        [[ $FILES_COMPRESS_AND_CACHE ]] && echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $COMPRESS_ENCODING $CACHE_POLICY --exclude '*.*' $FILES_COMPRESS_AND_CACHE
+        [[ $FILES_COMPRESS_ONLY ]] && echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $COMPRESS_ENCODING $CACHE_DEFAULT --exclude '*.*' $FILES_COMPRESS_ONLY
+        [[ $FILES_CACHE_ONLY ]] && echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $CACHE_POLICY --exclude '*.*' $FILES_CACHE_ONLY
         echo aws s3 sync --delete "$BUILD_DIRECTORY" "$BUCKET_PATH" $CACHE_DEFAULT $FILES_DEFAULT
       shell: bash
