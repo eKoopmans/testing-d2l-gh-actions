@@ -18,6 +18,14 @@ jobs:
           BUCKET_PATH: s3://brightspace-ui-core.d2l.dev/branches/pr-${{ github.event.number }}
           BUILD_DIRECTORY: ./build/
 
+      - name: Publish - cache-default
+        uses: ./.github/actions/publish-to-s3/
+        with:
+          AWS_ROLE: arn:aws:iam::037018655140:role/brightspace-ui-core.d2l.dev-githubactions-access
+          BUCKET_PATH: s3://brightspace-ui-core.d2l.dev/branches/pr-${{ github.event.number }}
+          BUILD_DIRECTORY: ./build/
+          CACHE_DEFAULT: --cache-control 'max-age=120'
+
       - name: Publish - compress
         uses: ./.github/actions/publish-to-s3/
         with:

@@ -10,16 +10,21 @@ inputs:
     description: The AWS role to assume - must have write permission for your bucket
     required: true
   BUCKET_PATH:
+    description: TODO
     required: true
   BUILD_DIRECTORY:
+    description: TODO
     required: true
   CACHE:
+    description: TODO
     default: ""
     required: false
   CACHE_DEFAULT:
+    description: TODO
     default: ""
     required: false
   COMPRESS:
+    description: TODO
     default: false
     required: false
 
