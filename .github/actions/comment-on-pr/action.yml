@@ -37,5 +37,5 @@ runs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: `<!-- ${process.env.UNIQUE_KEY} -->${process.env.MESSAGE}`
+            body: `<!-- ${process.env.UNIQUE_KEY} -->\n${process.env.MESSAGE}`
           })
