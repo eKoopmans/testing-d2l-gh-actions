@@ -1,0 +1,16 @@
+name: dependabot-to-draft
+on:
+  pull_request:
+    types: opened
+
+jobs:
+  set-draft:
+    runs-on: [self-hosted, Linux, AWS]
+
+    if: ${{ github.event.pull_request.user.login == 'eKoopmans' }}
+    steps:
+      - name: Put PR to draft
+        run: gh pr ready --undo "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
